@@ -1,6 +1,6 @@
 # EDCoLauncher
 
-A Bash script designed to automate the installation, configuration, and launching of [**EDCoPilot**](https://www.razzafrag.com/) and [**EDCoPTER**](https://edcopter.net/) for Elite Dangerous on Linux. Optimized for **CachyOS**, **Bazzite**, **Steam Deck**, and **NixOS**.
+A Bash script designed to automate the installation, configuration, and launching of [**EDCoPilot**](https://www.razzafrag.com/) and [**EDCoPTER**](https://edcopter.net/) for Elite Dangerous on Linux.<!-- Optimized for **CachyOS**, **Bazzite**, **Steam Deck**, and **NixOS**. -->
 
 ## 🚀 Features
 
