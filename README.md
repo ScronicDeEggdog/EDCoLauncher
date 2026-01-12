@@ -1,31 +1,32 @@
 # EDCoLauncher
 
-A specialized Bash utility designed to automate the installation, configuration, and launching of **EDCoPilot** and **EDCoPTER** for Elite Dangerous on Linux. Optimized for **CachyOS**, **Bazzite**, **Steam Deck**, and **NixOS**.
+A Bash script designed to automate the installation, configuration, and launching of [**EDCoPilot**](https://www.razzafrag.com/) and [**EDCoPTER**](https://edcopter.net/) for Elite Dangerous on Linux. Optimized for **CachyOS**, **Bazzite**, **Steam Deck**, and **NixOS**.
 
 ## 🚀 Features
 
 *   **Zero-Touch Setup**: Automatically fetches and installs the latest EDCoPilot .msi and EDCoPTER .exe releases from GitHub into your Elite Dangerous Proton prefix.
 *   **Intelligent Pathing**: Detects `WINEPREFIX` via `protontricks` and resolves installation paths for both per-user and system-wide installs.
+*   **Working Autofocus**: Runs the add-ons in the same container as the game, allowing route plotting, the pilot's dashboard and other features to work as intended.
 *   **Stability Enhancements**:
-    *   Forces `PROTON_NO_ESYNC=1` and `PROTON_NO_FSYNC=1` to ensure compatibility on systems with standard file descriptor limits.
     *   Disables Electron GPU sandboxing to prevent UI flickering/crashes in EDCoPTER.
-*   **Auto Close**: Closes the add-ons gracefully when you close the game launcher, or the game window if using MinEdLauncher alongside.
+*   **Auto Close**: Closes the add-ons gracefully when you close the game launcher, or the game window if using alongside MinEdLauncher.
 *   **Advanced Logging**: Redirects `stdout` and `stderr` to timestamped, color-stripped log files for easy debugging.
 
 ## 📋 Prerequisites
 
 *   **Elite Dangerous**: Installed via Steam (App ID: `359320`).
 *   **Protontricks**: Must be installed and available in your `$PATH`.
-*   **System Dependencies**: `curl`, `sed`, `grep`, and `tput` (standard on most distros).
+*   **System Dependencies**: `curl`, `sed`, `grep`, `pgrep` and `tput` (standard on most distros).
 
 ## 🛠️ Installation & Setup
 
-1.  **Clone the repository**:
-    ```bash
-    git clone github.com
-    cd EDCoLauncher
-    chmod +x EDCoLauncher.sh
-    ```
+1.  Download the latest release from [here](https://github.com/ScronicDeEggdog/EDCoLauncher/releases):
+2.  Unzip the file
+3.  Make the EDCoLauncher.sh file executable
+4.  Make any changes you need to the config file
+5.  Copy both files into the Elite Dangerous install directory. You can find the right folder by right clicking on the game in Steam, then going to Properties -> Installed Files -> Browse
+6.  Check out the [useage](#Usage) section for instructions on how to use EDCoLauncher
+
 ## ⚙️ Configuration
 
 The script reads from `EDCoLauncher_config`. If it doesn't exist, it applies safe defaults.
