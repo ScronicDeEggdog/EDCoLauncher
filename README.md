@@ -65,7 +65,8 @@ To run the launcher alongside MinEdCopilot, change your Steam Launch Options to:
 ```bash
 <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
-<mark>**EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher**</mark>
+**Warning**
+**EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher**
 
 ## 📂 Troubleshooting & Logs
 The script generates specific logs in its local directory:
@@ -79,7 +80,7 @@ The script generates specific logs in its local directory:
 This project is licensed under the GNU GPLv3 License.
 
 ## 🤝 Acknowledgments
-[EDCoPilot](https://www.razzafrag.com/) by Razzafrag
-[EDCoPTER](https://edcopter.net/) by Mark Hollingworth
-[Elite Dangerous](https://www.elitedangerous.com/) by Frontier Developments
-[protontricks](https://github.com/Matoking/protontricks) by Matoking
+[EDCoPilot](https://www.razzafrag.com/) by Razzafrag  
+[EDCoPTER](https://edcopter.net/) by Mark Hollingworth  
+[Elite Dangerous](https://www.elitedangerous.com/) by Frontier Developments  
+[protontricks](https://github.com/Matoking/protontricks) by Matoking  
