@@ -17,7 +17,6 @@ A Bash script designed to automate the installation, configuration, and launchin
 *   **Elite Dangerous**: Installed via Steam (App ID: `359320`).
 *   **Protontricks**: Must be installed and available in your `$PATH`.
 *   **System Dependencies**: `curl`, `sed`, `grep`, `pgrep` and `tput` (standard on most distros).
-*   **Elite Dangerous Proton Version**: `curl`, `sed`, `grep`, `pgrep` and `tput` (standard on most distros).
 
 ## 🛠️ Installation & Setup
 
@@ -53,6 +52,10 @@ EDCOPTER_EXE_PATH="" # Specify the path to the EDCoPTER.exe file if you installe
 
 ## 🖥️ Usage
 
+<blockquote>
+<p>[!NOTE]
+EDCoLauncher has been tested and works with Proton 10.0-3. Using a different Proton version may not work</p>
+</blockquote>
 To run EDCoPilot and EDCoPTER manually after the game launches, run the script from your terminal:
 ```bash
 ./EDCoLauncher.sh
