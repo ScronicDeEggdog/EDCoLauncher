@@ -25,7 +25,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 3.  Make the EDCoLauncher.sh file executable
 4.  Read the configuration section below and make any changes you need to the config file
 5.  Copy both files into the Elite Dangerous install directory. You can find the right folder by right clicking on the game in Steam, then going to Properties -> Installed Files -> Browse
-6.  Check out the [useage](#--usage) section for instructions on how to use EDCoLauncher
+6.  Check out the [useage](#%EF%B8%8F-usage) section for instructions on how to use EDCoLauncher
 
 ## ⚙️ Configuration
 
