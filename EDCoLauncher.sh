@@ -45,7 +45,34 @@ steam_library_file="${steam_install_path}/config/libraryfolders.vdf"
 # Elite Dangerous vars
 ############################
 ed_app_id="359320"
-ed_wine_prefix=$(grep -l "${ed_app_id}" ${steam_library_file} | xargs dirname | xargs dirname)/steamapps/compatdata/${ed_app_id}/pfx
+ed_wine_prefix=""
+
+ed_library_paths=$(awk -v appid="${ed_app_id}" '
+    /"path"/ {
+        current_path = $2;
+        gsub(/"/, "", current_path)
+    }
+    /"apps"/ { in_apps = 1 }
+    in_apps && $1 ~ "\""appid"\"" {
+        print current_path
+    }
+    /}/ && in_apps { in_apps = 0 }
+' "${steam_library_file}")
+
+# Loop through each found path to create the wine prefixes
+for path in $ed_library_paths; do
+    full_prefix="${path}/steamapps/compatdata/${ed_app_id}/pfx"
+    if [ -e "${full_prefix}" ]; then
+        ed_wine_prefix="${full_prefix}"
+        break
+    fi
+done
+
+if [[ -z "${ed_wine_prefix}" ]]; then
+    echo "${colour_cyan}ERROR:${colour_reset} Couldn't find a suitable game prefix in your libraryfolders.vdf file. Make sure the the library Elite Dangerous is installed in is accessible."
+    exit 1
+fi
+
 ed_proton_path=$(grep -m 1 -E "/(common|compatibilitytools.d)/[^/]*(Proton|proton)" "$(dirname ${ed_wine_prefix})/config_info" | sed 's|/files/.*||') # Gets the path to the proton binary used by Elite Dangerous
 
 ############################
