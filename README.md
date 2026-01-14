@@ -8,8 +8,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 *   **Zero-Touch Setup**: Automatically fetches and installs the latest EDCoPilot `.msi` and EDCoPTER `.exe` releases from GitHub directly into your Elite Dangerous Proton prefix.
 *   **Working Autofocus**: Runs add-ons within the official game container, ensuring route plotting, the pilot's dashboard, and overlays function as intended.
 *   **Stability Enhancements**: 
-    *   Disables Electron GPU sandboxing to prevent UI flickering/crashes in EDCoPTER.
-    *   Includes optional HOTAS stability fixes.
+    *   Includes HOTAS stability fix which is enabled by default
 *   **Auto Close**: Gracefully terminates add-ons when the game launcher or game window (if using MinEdLauncher) is closed.
 *   **Advanced Logging**: Redirects `stdout` and `stderr` to timestamped, color-stripped log files for easy debugging.
 
