@@ -1,3 +1,7 @@
+###################
+# General settings
+###################
+
 # Set to "true" for the first run to fetch and install latest GitHub releases. If you've already installed the add-ons, leave these set to "false"
 INSTALL_EDCOPILOT="false"
 INSTALL_EDCOPTER="false"
@@ -6,11 +10,25 @@ INSTALL_EDCOPTER="false"
 EDCOPILOT_ENABLED="true"
 EDCOPTER_ENABLED="true"
 
-# Stability options
-HOTAS_FIX_ENABLED="true" # Set to true to fix HOTAS-related game crashes
-DISABLE_PROTON_ESYNC="false" # Set to true if you're hitting file descriptor limits (common on NixOS). This is a general compatibility option and should only be used if you're experiencing problems
-DISABLE_PROTON_FSYNC="false" # Set to true to disbale Fsync in the wine prefix. This is a general compatibility option and should only be used if you're experiencing problems
+# The number of seconds to wait while trying to detect the launcher before exiting
+LAUNCHER_DETECTION_TIMEOUT=30
 
+# The number of seconds to wait while trying to detect the EDCoPilot GUI before exiting
+EDCOPILOT_DETECTION_TIMEOUT=50
+
+####################
+# Stability options
+####################
+
+# Set to true to fix HOTAS-related game crashes
+HOTAS_FIX_ENABLED="true"
+
+#################
 # Optional paths
-EDCOPILOT_EXE_PATH="" # Specify the path to the LaunchEDCoPilot.exe file if you installed into a non-default location. Leave blank otherwise
-EDCOPTER_EXE_PATH="" # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
+#################
+
+# Specify the path to the LaunchEDCoPilot.exe file if you installed into a non-default location. Leave blank otherwise
+EDCOPILOT_EXE_PATH=""
+
+# Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
+EDCOPTER_EXE_PATH=""
