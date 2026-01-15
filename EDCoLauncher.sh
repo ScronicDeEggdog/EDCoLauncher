@@ -110,48 +110,38 @@ edcopter_install_log_file="$PWD/EDCoLauncher_EDCoPTER_Install.log"
 edcopilot_default_install_exe_path="${ed_wine_prefix}/drive_c/EDCoPilot/LaunchEDCoPilot.exe"
 edcopter_default_per_user_exe_path="${ed_wine_prefix}/drive_c/users/steamuser/AppData/Local/Programs/EDCoPTER/EDCoPTER.exe"
 edcopter_default_all_users_exe_path="${ed_wine_prefix}/drive_c/Program Files/EDCoPTER/EDCoPTER.exe"
-edcopter_default_install_exe_path=$([[ -f "${edcopter_default_per_user_exe_path}" ]] && echo "${edcopter_default_per_user_exe_path}" || echo "${edcopter_default_all_users_exe_path}") # Check the per-user install location first and fall back on the system-wide install location
+
+# Check the per-user install location of EDCoPTER first and fall back on the system-wide install location
+if [[ -f "${edcopter_default_per_user_exe_path}" ]]; then
+    edcopter_default_install_exe_path="${edcopter_default_per_user_exe_path}"
+else
+    edcopter_default_install_exe_path="${edcopter_default_all_users_exe_path}"
+fi
 
 #############################
 # Handle config file
 #############################
-if [[ -f "$PWD/EDCoLauncher_config" ]]; then
+
+[[ -f "${config_file_path}" ]] && . "${config_file_path}" || echo "${colour_yellow}WARNING:${colour_reset} Config file does not exist. Setting defaults"
+
     # General settings
-    install_edcopilot=$(. "${config_file_path}" && echo "$INSTALL_EDCOPILOT")
-    install_edcopter=$(. "${config_file_path}" && echo "$INSTALL_EDCOPTER")
-    edcopilot_enabled=$(. "${config_file_path}" && echo "$EDCOPILOT_ENABLED")
-    edcopter_enabled=$(. "${config_file_path}" && echo "$EDCOPTER_ENABLED")
-    launcher_detection_timeout=$(. "${config_file_path}" && echo "$LAUNCHER_DETECTION_TIMEOUT")
-    edcopilot_detection_timeout=$(. "${config_file_path}" && echo "$EDCOPILOT_DETECTION_TIMEOUT")
+    install_edcopilot="${INSTALL_EDCOPILOT:-false}"
+    install_edcopter="${INSTALL_EDCOPTER:-false}"
+    edcopilot_enabled="${EDCOPILOT_ENABLED:-true}"
+    edcopter_enabled="${EDCOPTER_ENABLED:-true}"
+    launcher_detection_timeout="${LAUNCHER_DETECTION_TIMEOUT:-30}"
+    edcopilot_detection_timeout="${EDCOPILOT_DETECTION_TIMEOUT:-40}"
 
     # Stability options
-    hotas_fix_enabled=$(. "${config_file_path}" && echo "$HOTAS_FIX_ENABLED")
+    hotas_fix_enabled="${HOTAS_FIX_ENABLED:-true}"
 
     # Optional paths
-    edcopilot_path=$(. "${config_file_path}" && echo "$EDCOPILOT_EXE_PATH")
-    edcopter_path=$(. "${config_file_path}" && echo "$EDCOPTER_EXE_PATH")
+    edcopilot_path="${EDCOPILOT_EXE_PATH:-}"
+    edcopter_path="${EDCOPTER_EXE_PATH:-}"
 
     # Handle empty path variables
     edcopilot_final_path=$([[ -z "$edcopilot_path" ]] && echo "${edcopilot_default_install_exe_path}" || echo "${edcopilot_path}")
     edcopter_final_path=$([[ -z "$edcopter_path" ]] && echo "${edcopter_default_install_exe_path}" || echo "${edcopter_path}")
-else
-    echo "${colour_yellow}WARNING:${colour_reset} Config file does not exist. Setting defaults"
-
-    # General settings
-    install_edcopilot="false"
-    install_edcopter="false"
-    edcopilot_enabled="true"
-    edcopter_enabled="true"
-    launcher_detection_timeout=30
-    edcopilot_detection_timeout=40
-
-    # Stability options
-    hotas_fix_enabled="true"
-
-    # Optional paths
-    edcopilot_final_path="${edcopilot_default_install_exe_path}"
-    edcopter_final_path="${edcopter_default_install_exe_path}"
-fi
 
 #############################
 # Pre-flight cleanup
@@ -394,7 +384,6 @@ if [[ "$edcopilot_enabled" == "true" && "${edcopilot_installed}" == "true" ]]; t
     echo ""
     echo "${colour_cyan}INFO:${colour_reset} Launching EDCoPilot"
 
-    #$steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" -- "${ed_proton_path}/proton" run "${edcopilot_final_path}" &> "${edcopilot_log_file}" &
     $steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" --pass-env-matching="WINE*" --pass-env-matching="STEAM*" --pass-env-matching="PROTON*" --env="SteamGameId=${ed_app_id}" -- "${WINELOADER}" "${edcopilot_final_path}" &> "${edcopilot_log_file}" &
     edcopilot_pid=$!
 
