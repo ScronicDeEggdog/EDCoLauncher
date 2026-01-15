@@ -1,0 +1,112 @@
+name: Build AppImage & Shortcut
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # ---------------------------------------------------------
+    # PART 1: PREPARE THE APPIMAGE INTERNAL STRUCTURE
+    # ---------------------------------------------------------
+    - name: Prepare AppDir Structure
+      run: |
+        mkdir -p EDCoLauncher.AppDir/usr/bin
+
+    - name: Set AppImage Icon (Visual only)
+      run: |
+        # We download a generic icon for the file itself (so it doesn't look blank in file manager)
+        # But the system will use the Steam icon for the running app.
+        wget -q -O EDCoLauncher.AppDir/.DirIcon https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tux.png/256px-Tux.png
+
+    - name: Create Internal AppRun (The Logic)
+      run: |
+        cat << 'EOF' > EDCoLauncher.AppDir/AppRun
+        #!/bin/bash
+        APPDIR="$(dirname "$(readlink -f "${0}")")"
+        TARGET_DIR="$PWD"
+        
+        INTERNAL_SCRIPT="$APPDIR/usr/bin/EDCoLauncher.sh"
+        INTERNAL_CONFIG="$APPDIR/usr/bin/EDCoLauncher_config"
+        EXTERNAL_CONFIG="$TARGET_DIR/EDCoLauncher_config"
+        
+        # Copy config to current dir if it doesn't exist
+        if [ ! -f "$EXTERNAL_CONFIG" ]; then
+            echo "Creating default configuration file in $TARGET_DIR..."
+            cp "$INTERNAL_CONFIG" "$EXTERNAL_CONFIG"
+        fi
+        
+        # Run the internal script
+        exec "$INTERNAL_SCRIPT" "$@"
+        EOF
+        chmod +x EDCoLauncher.AppDir/AppRun
+
+    - name: Create Internal Desktop File (Metadata)
+      run: |
+        # This file lives INSIDE the AppImage and tells Linux how to handle the file.
+        # We use your requested Icon here so it matches Steam.
+        cat <<EOF > EDCoLauncher.AppDir/EDCoLauncher.desktop
+        [Desktop Entry]
+        Name=EDCoLauncher
+        Exec=AppRun
+        Icon=steam_icon_359320
+        Type=Application
+        Categories=Game;Utility;
+        Terminal=false
+        EOF
+
+    - name: Copy & Permission Scripts
+      run: |
+        cp EDCoLauncher.sh EDCoLauncher.AppDir/usr/bin/
+        cp EDCoLauncher_config EDCoLauncher.AppDir/usr/bin/
+        chmod +x EDCoLauncher.AppDir/usr/bin/EDCoLauncher.sh
+
+    # ---------------------------------------------------------
+    # PART 2: BUILD THE APPIMAGE
+    # ---------------------------------------------------------
+    - name: Build AppImage
+      run: |
+        wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x appimagetool-x86_64.AppImage
+        ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run EDCoLauncher.AppDir
+        mv EDCoLauncher-x86_64.AppImage Elite_Dangerous_EDCoLauncher-x86_64.AppImage
+
+    # ---------------------------------------------------------
+    # PART 3: GENERATE THE USER SHORTCUT
+    # ---------------------------------------------------------
+    - name: Create Desktop Shortcut File
+      run: |
+        # This creates a separate file that the user can put on their desktop.
+        # It uses the EXACT content you requested.
+        cat <<EOF > "Elite Dangerous (EDCoLauncher).desktop"
+        [Desktop Entry]
+        Name=Elite Dangerous (EDCoLauncher)
+        Exec=steam steam://rungameid/359320
+        Icon=steam_icon_359320
+        Type=Application
+        Categories=Game;Utility;
+        Terminal=false
+        EOF
+        
+        # Make it executable so it works immediately upon download
+        chmod +x "Elite Dangerous (EDCoLauncher).desktop"
+
+    # ---------------------------------------------------------
+    # PART 4: UPLOAD EVERYTHING
+    # ---------------------------------------------------------
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: EDCoLauncher-Release
+        path: |
+          Elite_Dangerous_EDCoLauncher-x86_64.AppImage
+          Elite Dangerous (EDCoLauncher).desktop
