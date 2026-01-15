@@ -130,6 +130,7 @@ if [[ -f "$PWD/EDCoLauncher_config" ]]; then
     # Optional paths
     edcopilot_path=$(. "${config_file_path}" && echo "$EDCOPILOT_EXE_PATH")
     edcopter_path=$(. "${config_file_path}" && echo "$EDCOPTER_EXE_PATH")
+    google_tts_key_path=$(. "${config_file_path}" && echo "$GOOGLE_TTS_KEY_PATH")
 
     # Handle empty path variables
     edcopilot_final_path=$([[ -z "$edcopilot_path" ]] && echo "${edcopilot_default_install_exe_path}" || echo "${edcopilot_path}")
@@ -389,7 +390,42 @@ if [[ "$edcopilot_enabled" == "true" && "${edcopilot_installed}" == "true" ]]; t
     sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/EDCoPilot.ini"
     sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/edcopilotgui.ini"
 
+    # Handle Google TTS Environment Variable
+    google_tts_env_string=""
+    if [[ -n "${google_tts_key_path}" ]]; then
+        if [[ -f "${google_tts_key_path}" ]]; then
+            # Convert Linux path to Wine Windows path (Z:\...)
+            # We swap forward slashes for backslashes and prepend Z:
+            win_tts_path="Z:${google_tts_key_path//\//\\}"
+
+            echo "${colour_cyan}INFO:${colour_reset} Google TTS Key found. Injecting GOOGLE_APPLICATION_CREDENTIALS..."
+            echo "${colour_cyan}INFO:${colour_reset} Mapped path: ${win_tts_path}"
+
+            # Format the env string for the steam launcher
+            google_tts_env_string="--env=GOOGLE_APPLICATION_CREDENTIALS=${win_tts_path}"
+        else
+            echo "${colour_yellow}WARNING:${colour_reset} Google TTS key path defined but file not found: ${google_tts_key_path}"
+        fi
+    fi
+
     sleep 1
+
+    # We add ${google_tts_env_string} to the command below
+    # Construct the base arguments array
+    runtime_args=(
+        --bus-name="com.steampowered.App${ed_app_id}"
+        --pass-env-matching="WINE*"
+        --pass-env-matching="STEAM*"
+        --pass-env-matching="PROTON*"
+        --env="SteamGameId=${ed_app_id}"
+    )
+
+    # Conditionally add the Google TTS env var if it exists
+    if [[ -n "${google_tts_env_string}" ]]; then
+        # We strip the "--env=" prefix we added earlier to avoid double-handling
+        # Actually, let's just use the raw string, but add it to the array safely
+        runtime_args+=("${google_tts_env_string}")
+    fi
 
     echo ""
     echo "${colour_cyan}INFO:${colour_reset} Launching EDCoPilot"

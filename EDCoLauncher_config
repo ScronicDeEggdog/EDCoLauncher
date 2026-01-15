@@ -32,3 +32,12 @@ EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
 EDCOPTER_EXE_PATH=""
+
+#################
+# Google TTS
+#################
+
+# Path to your Google Cloud JSON key file.
+# Example: "/home/deck/Documents/edcopilot-key.json"
+# Leave blank to disable.
+GOOGLE_TTS_KEY_PATH=""

@@ -11,6 +11,7 @@ A Bash script designed to automate the installation, configuration, and launchin
     *   Includes HOTAS stability fix which is enabled by default
 *   **Auto Close**: Gracefully terminates add-ons when the game launcher or game window (if using MinEdLauncher) is closed.
 *   **Advanced Logging**: Redirects `stdout` and `stderr` to timestamped, color-stripped log files for easy debugging.
+*   **Google TTS Supported**: You can set your json key in the config use Google TTS Service
 
 ## 📋 Prerequisites
 
@@ -73,6 +74,17 @@ EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
 EDCOPTER_EXE_PATH=""
+
+#################
+# Google TTS
+#################
+
+# Path to your Google Cloud JSON key file.
+# Example: "/home/deck/Documents/edcopilot-key.json"
+# Leave blank to disable.
+GOOGLE_TTS_KEY_PATH=""
+
+
 ```
 
 ## 🖥️ Usage
