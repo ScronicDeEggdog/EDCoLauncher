@@ -4,7 +4,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 
 ## 🚀 Features
 
-*   **Native Steam Integration**: Bypasses `protontricks` entirely, leveraging the **Steam Linux Runtime** and official Steam environment variables for maximum compatibility.
+*   **Native Steam Integration**: Leverages the **Steam Linux Client Runtime** and official Steam environment variables for maximum compatibility.
 *   **Zero-Touch Setup**: Automatically fetches and installs the latest EDCoPilot `.msi` and EDCoPTER `.exe` releases from GitHub directly into your Elite Dangerous Proton prefix.
 *   **Working Autofocus**: Runs add-ons within the official game container, ensuring route plotting, the pilot's dashboard, and overlays function as intended.
 *   **Stability Enhancements**: 
@@ -101,7 +101,7 @@ The script generates specific logs in its local directory:
 *   **EDCoLauncher_EDCoPilot_Install.log**: Output from the .msi installation process.
 *   **EDCoLauncher_EDCoPTER_Install.log**: Output from the .exe installation process.
 *   **EDCoLauncher_EDCoPilot.log**: Runtime output from EDCoPilot.
-*   **EDCoLauncher_EDCoPTER.log**: Runtime output from EDCoPilot.
+*   **EDCoLauncher_EDCoPTER.log**: Runtime output from EDCoPTER.
 
 ## ⚖️ License
 This project is licensed under the GNU GPLv3 License.
@@ -110,5 +110,3 @@ This project is licensed under the GNU GPLv3 License.
 [EDCoPilot](https://www.razzafrag.com/) by Razzafrag  
 [EDCoPTER](https://edcopter.net/) by Mark Hollingworth  
 [Elite Dangerous](https://www.elitedangerous.com/) by Frontier Developments 
-
-
