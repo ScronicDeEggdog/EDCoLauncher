@@ -42,6 +42,12 @@ echo "${colour_cyan}INFO:${colour_reset} Starting execution"
 
 # Steam Paths
 steam_install_path=$(readlink -f "$HOME/.steam/root") # Gets the Steam install path on the system
+
+if [ ! -d "${steam_install_path}" ]; then
+    echo "${colour_red}ERROR:${colour_reset} Couldn't find your Steam install path. If you're running this script manually and you're using a flatpak install of Steam, it won't work. You must run the script using the games Lauch Options. Exiting."
+    exit 1
+fi
+
 steam_base_path="${steam_install_path}/steamapps"
 steam_pressure_vessel_bin_path="${steam_base_path}/common/SteamLinuxRuntime_sniper/pressure-vessel/bin"
 steam_compat_data_path="${steam_base_path}/compatdata"
