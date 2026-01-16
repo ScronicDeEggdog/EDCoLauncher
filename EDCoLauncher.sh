@@ -40,19 +40,8 @@ echo "${colour_cyan}INFO:${colour_reset} Starting execution"
 # Steam vars
 ############################
 
-# Check for Flatpak steam root path first
-if [ -d "$HOME/.var/app/com.valvesoftware.Steam/.steam/steam" ]; then
-    steam_install_type="Flatpak"
-    steam_install_path="$HOME/.var/app/com.valvesoftware.Steam/.steam/steam"
-# Fall back to the native Steam install
-elif [ -d "$HOME/.steam/root" ]; then
-    steam_install_type="Native"
-    steam_install_path=$(readlink -f "$HOME/.steam/root")
-else
-    echo "${colour_red}ERROR:${colour_reset} Could not find a Steam installation. Exiting."
-    exit 1
-fi
-
+# Steam Paths
+steam_install_path=$(readlink -f "$HOME/.steam/root") # Gets the Steam install path on the system
 steam_base_path="${steam_install_path}/steamapps"
 steam_pressure_vessel_bin_path="${steam_base_path}/common/SteamLinuxRuntime_sniper/pressure-vessel/bin"
 steam_compat_data_path="${steam_base_path}/compatdata"
@@ -339,7 +328,6 @@ echo "${colour_cyan}OS Pretty Name:${colour_reset} ${os_pretty_name}"
 echo "${colour_cyan}OS ID:${colour_reset} ${os_id}"
 echo "${colour_cyan}OS Like:${colour_reset} ${os_like}"
 echo ""
-echo "${colour_cyan}Steam Install Type:${colour_reset} ${steam_install_type}"
 echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
 echo "${colour_cyan}Steam Linux Client Runtime Path:${colour_reset} ${steam_linux_client_runtime_cmd}"
 echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
