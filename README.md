@@ -84,7 +84,7 @@ EDCoLauncher is optimized for Proton 10.0-3. Other versions of proton may not wo
 
 <blockquote>
 <p>[!WARNING]
-Running this script manually is not supported. You can monitor what the script is doing in realtime by running </p><pre><code>tail -f EDCoLauncher.log</code></pre>
+Running this script manually is not supported. You can monitor what the script is doing in realtime by running: </p><pre><code>tail -f EDCoLauncher.log</code></pre>
 </blockquote>
 
 To run the add-ons automatically with the game, change your Steam Launch Options to:
