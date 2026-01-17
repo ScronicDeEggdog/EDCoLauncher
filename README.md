@@ -84,13 +84,9 @@ EDCoLauncher is optimized for Proton 10.0-3. Other versions of proton may not wo
 
 <blockquote>
 <p>[!WARNING]
-The manual launch method is only supported if you're using the native Steam client. For flatpak installs, you MUST run the script from the launch options in Steam.
+Running this script manually is not supported. You can monitor what the script is doing by running </p><pre><code>tail -f EDCoLauncher.log</code></pre>
 </blockquote>
 
-To run EDCoPilot and EDCoPTER manually, make sure you add `STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command%` to your game Launch Options, then run the script from your terminal after the game launches:
-```bash
-./EDCoLauncher.sh
-```
 To run the add-ons automatically with the game, change your Steam Launch Options to:
 ```bash
 STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command% & ./EDCoLauncher.sh
