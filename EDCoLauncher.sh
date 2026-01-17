@@ -304,6 +304,10 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
     echo "${colour_cyan}INFO:${colour_reset} Getting game window PID..."
     edlauncher_pid=$(pgrep -f "Z:..*EliteDangerous64.exe")
 
+    # Get the correct path to the steam-linux-client-runtime binary
+    echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
+    steam_linux_client_runtime_cmd="${steam_install_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EliteDangerous64.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Elite Dangerous window PID: ${edlauncher_pid}. Preparing to launch Add-ons..."
     else
@@ -313,6 +317,11 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 else
     echo "${colour_cyan}INFO:${colour_reset} Detected Elite Dangerous Launcher. Getting Launcher PID..."
     edlauncher_pid=$(pgrep -f "Z:..*steamapps.common.Elite Dangerous.EDLaunch.exe.*")
+
+    # Get the correct path to the steam-linux-client-runtime binary
+    echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
+    steam_linux_client_runtime_cmd="${steam_install_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EDLaunch.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Detected the Elite Dangerous Launcher (PID: ${edlauncher_pid}). Preparing to launch Add-ons..."
         echo ""
@@ -322,9 +331,10 @@ else
     fi
 fi
 
-# Get the correct path to the steam-linux-client-runtime binary
-
-steam_linux_client_runtime_cmd="${steam_install_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+if [ ! -f "${steam_linux_client_runtime_cmd}" ]; then
+    echo "${colour_red}ERROR:${colour_reset} Couldn't find the correct Steam Linux Client Runtime. Exiting."
+    exit 1
+fi
 
 #############################
 # Print configuration summary
