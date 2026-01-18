@@ -58,6 +58,7 @@ steam_library_file="${steam_install_path}/config/libraryfolders.vdf"
 ############################
 ed_app_id="359320"
 ed_wine_prefix=""
+ed_steam_library_base_path=""
 
 ed_library_paths=$(awk -v appid="${ed_app_id}" '
     /"path"/ {
@@ -76,6 +77,7 @@ for path in $ed_library_paths; do
     full_prefix="${path}/steamapps/compatdata/${ed_app_id}/pfx"
     if [ -e "${full_prefix}" ]; then
         ed_wine_prefix="${full_prefix}"
+        ed_steam_library_base_path="${path}"
         break
     fi
 done
@@ -177,6 +179,30 @@ fi
 if [[ -f "${edcopter_final_path}" ]]; then
     edcopter_installed="true"
 fi
+
+#############################
+# Print configuration summary
+#############################
+echo "${colour_cyan}Current User:${colour_reset} ${username}"
+echo "${colour_cyan}OS Pretty Name:${colour_reset} ${os_pretty_name}"
+echo "${colour_cyan}OS ID:${colour_reset} ${os_id}"
+echo "${colour_cyan}OS Like:${colour_reset} ${os_like}"
+echo ""
+echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
+echo "${colour_cyan}Elite Dangerous Steam Library Path:${colour_reset} ${ed_steam_library_base_path}"
+echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
+echo "${colour_cyan}Elite Dangerous Proton Path:${colour_reset} ${ed_proton_path}"
+echo "${colour_cyan}Elite Dangerous Steam App ID:${colour_reset} ${ed_app_id}"
+echo ""
+echo "${colour_cyan}Config File Path:${colour_reset} ${config_file_path}"
+echo "${colour_cyan}EDCoPilot Enabled:${colour_reset} ${edcopilot_enabled}"
+echo "${colour_cyan}EDCoPTER Enabled:${colour_reset} ${edcopter_enabled}"
+echo "${colour_cyan}EDCoPilot Installed:${colour_reset} ${edcopilot_installed}"
+echo "${colour_cyan}EDCoPTER Installed:${colour_reset} ${edcopter_installed}"
+echo "${colour_cyan}EDCoPilot Path:${colour_reset} ${edcopilot_final_path}"
+echo "${colour_cyan}EDCoPTER Path:${colour_reset} ${edcopter_final_path}"
+echo "${colour_cyan}HOTAS Fix Enabled:${colour_reset} ${hotas_fix_enabled}"
+echo ""
 
 ############################
 # Install Logic
@@ -306,7 +332,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
-    steam_linux_client_runtime_cmd="${steam_install_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EliteDangerous64.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+    steam_linux_client_runtime_cmd="${ed_steam_library_base_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EliteDangerous64.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
 
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Elite Dangerous window PID: ${edlauncher_pid}. Preparing to launch Add-ons..."
@@ -320,7 +346,7 @@ else
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
-    steam_linux_client_runtime_cmd="${steam_install_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EDLaunch.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+    steam_linux_client_runtime_cmd="${ed_steam_library_base_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EDLaunch.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
 
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Detected the Elite Dangerous Launcher (PID: ${edlauncher_pid}). Preparing to launch Add-ons..."
@@ -332,31 +358,11 @@ else
 fi
 
 if [ ! -f "${steam_linux_client_runtime_cmd}" ]; then
-    echo "${colour_red}ERROR:${colour_reset} Couldn't find the correct Steam Linux Client Runtime. Exiting."
+    echo "${colour_red}ERROR:${colour_reset} Couldn't find the correct Steam Linux Client Runtime at this path: ${steam_linux_client_runtime_cmd}. Exiting."
     exit 1
+else
+    echo "${colour_cyan}INFO:${colour_reset} Steam Linux Client Runtime Path: ${steam_linux_client_runtime_cmd}"
 fi
-
-#############################
-# Print configuration summary
-#############################
-echo "${colour_cyan}Current User:${colour_reset} ${username}"
-echo "${colour_cyan}OS Pretty Name:${colour_reset} ${os_pretty_name}"
-echo "${colour_cyan}OS ID:${colour_reset} ${os_id}"
-echo "${colour_cyan}OS Like:${colour_reset} ${os_like}"
-echo ""
-echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
-echo "${colour_cyan}Steam Linux Client Runtime Path:${colour_reset} ${steam_linux_client_runtime_cmd}"
-echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
-echo "${colour_cyan}Elite Dangerous Proton Path:${colour_reset} ${ed_proton_path}"
-echo "${colour_cyan}Elite Dangerous Steam App ID:${colour_reset} ${ed_app_id}"
-echo ""
-echo "${colour_cyan}Config File Path:${colour_reset} ${config_file_path}"
-echo "${colour_cyan}EDCoPilot Enabled:${colour_reset} ${edcopilot_enabled}"
-echo "${colour_cyan}EDCoPTER Enabled:${colour_reset} ${edcopter_enabled}"
-echo "${colour_cyan}EDCoPilot Path:${colour_reset} ${edcopilot_final_path}"
-echo "${colour_cyan}EDCoPTER Path:${colour_reset} ${edcopter_final_path}"
-echo "${colour_cyan}HOTAS Fix Enabled:${colour_reset} ${hotas_fix_enabled}"
-echo ""
 
 ##########################################################
 # Manage windows.gaming.input to fix HOTAS crash problem
