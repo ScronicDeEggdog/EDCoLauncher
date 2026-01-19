@@ -40,6 +40,18 @@ echo "${colour_cyan}INFO:${colour_reset} Starting execution"
 # Steam vars
 ############################
 
+steam_install_type="Unknown"
+
+# Check if Steam is a flatpak install or not
+
+if [[ -f "/.flatpak-info" ]] && [[ "$FLATPAK_ID" == "com.valvesoftware.Steam" ]]; then
+    echo "${colour_cyan}INFO:${colour_reset} This is a Flatpak install of Steam"
+    steam_install_type="Flatpak"
+else
+    echo "${colour_cyan}INFO:${colour_reset} This is a Native install of Steam"
+    steam_install_type="Native"
+fi
+
 # Steam Paths
 steam_install_path=$(readlink -f "$HOME/.steam/root") # Gets the Steam install path on the system
 
@@ -188,7 +200,9 @@ echo "${colour_cyan}OS Pretty Name:${colour_reset} ${os_pretty_name}"
 echo "${colour_cyan}OS ID:${colour_reset} ${os_id}"
 echo "${colour_cyan}OS Like:${colour_reset} ${os_like}"
 echo ""
+echo "${colour_cyan}Steam Install Type:${colour_reset} ${steam_install_type}"
 echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
+echo "${colour_cyan}Steam Library File Path:${colour_reset} ${steam_library_file}"
 echo "${colour_cyan}Elite Dangerous Steam Library Path:${colour_reset} ${ed_steam_library_base_path}"
 echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
 echo "${colour_cyan}Elite Dangerous Proton Path:${colour_reset} ${ed_proton_path}"
@@ -332,7 +346,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
-    steam_linux_client_runtime_cmd="${ed_steam_library_base_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EliteDangerous64.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+    steam_linux_client_runtime_cmd="$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EliteDangerous64.exe" | sed -n 's|.* \(/[^ ]*/SteamLinuxRuntime_[^/]*/pressure-vessel\)/.*|\1|p' | head -n 1)/bin/steam-runtime-launch-client"
 
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Elite Dangerous window PID: ${edlauncher_pid}. Preparing to launch Add-ons..."
@@ -346,7 +360,7 @@ else
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
-    steam_linux_client_runtime_cmd="${ed_steam_library_base_path}$(pgrep -fa "SteamLinuxRuntime_.*/pressure-vessel.*/EDLaunch.exe" | sed -n 's|.*\(/[^ ]\+/common/SteamLinuxRuntime_[^/]\+\)/.*|\1|p' | head -n 1)/pressure-vessel/bin/steam-runtime-launch-client"
+    steam_linux_client_runtime_cmd="$(pgrep -fa "SteamLinuxRuntime_.*pressure-vessel.*/EDLaunch.exe" | sed -n 's|.* \(/[^ ]*/SteamLinuxRuntime_[^/]*/pressure-vessel\)/.*|\1|p' | head -n 1)/bin/steam-runtime-launch-client"
 
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Detected the Elite Dangerous Launcher (PID: ${edlauncher_pid}). Preparing to launch Add-ons..."
