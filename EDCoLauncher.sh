@@ -99,7 +99,6 @@ if [[ -z "${ed_wine_prefix}" ]]; then
     exit 1
 fi
 
-ed_wine_root_drive=$(find "${ed_wine_prefix}/dosdevices" -lname '/' -printf '%f\n' | tr '[:lower:]' '[:upper:]')
 ed_proton_path=$(grep -m 1 -E "/(common|compatibilitytools.d)/[^/]*(Proton|proton)" "$(dirname ${ed_wine_prefix})/config_info" | sed 's|/files/.*||') # Gets the path to the proton binary used by Elite Dangerous
 
 ############################
@@ -206,7 +205,6 @@ echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
 echo "${colour_cyan}Steam Library File Path:${colour_reset} ${steam_library_file}"
 echo "${colour_cyan}Elite Dangerous Steam Library Path:${colour_reset} ${ed_steam_library_base_path}"
 echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
-echo "${colour_cyan}Elite Dangerous Wine Root Drive:${colour_reset} ${ed_wine_root_drive}"
 echo "${colour_cyan}Elite Dangerous Proton Path:${colour_reset} ${ed_proton_path}"
 echo "${colour_cyan}Elite Dangerous Steam App ID:${colour_reset} ${ed_app_id}"
 echo ""
@@ -306,7 +304,7 @@ launcher_detection_count=0
 launcher_detection_interval=1
 
 echo "${colour_cyan}INFO:${colour_reset} Waiting for Elite Dangerous Launcher or MinEdLauncher to start for ${launcher_detection_timeout} seconds. You can change this value in the config file."
-while ! pgrep -f "${ed_wine_root_drive}..*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
+while ! pgrep -f "[ZX]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
 
     seconds_left=$(( $launcher_detection_timeout - $launcher_detection_count ))
     echo -ne "${seconds_left} seconds remaining...\r"
@@ -330,7 +328,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 
     game_window_detection_count=0
     game_window_detection_timeout=60
-    while ! pgrep -f "${ed_wine_root_drive}..*EliteDangerous64.exe" > /dev/null; do
+    while ! pgrep -f "[ZX]:.*EliteDangerous64.exe" > /dev/null; do
         seconds_left=$(( $game_window_detection_timeout - $game_window_detection_count ))
         echo -ne "${seconds_left} seconds remaining...\r"
 
@@ -344,7 +342,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
     done
 
     echo "${colour_cyan}INFO:${colour_reset} Getting game window PID..."
-    edlauncher_pid=$(pgrep -f "${ed_wine_root_drive}..*EliteDangerous64.exe")
+    edlauncher_pid=$(pgrep -f "[ZX]:.*EliteDangerous64.exe")
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
@@ -358,7 +356,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
     fi
 else
     echo "${colour_cyan}INFO:${colour_reset} Detected Elite Dangerous Launcher. Getting Launcher PID..."
-    edlauncher_pid=$(pgrep -f "${ed_wine_root_drive}..*steamapps.common.Elite Dangerous.EDLaunch.exe.*")
+    edlauncher_pid=$(pgrep -f "[ZX]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*")
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
