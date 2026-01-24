@@ -33,6 +33,7 @@ A Bash script designed to automate the installation, configuration, and launchin
     ```
 5.  Copy `EDCoLauncher.sh` and `EDCoLauncher_config` into your Elite Dangerous install directory. 
     *   *Tip: Right-click the game in Steam > Properties > Installed Files > Browse.*
+    *   *Tip: Use the root install directory, NOT the odyssey expansion directory*
 
 ## ⚙️ Configuration
 
