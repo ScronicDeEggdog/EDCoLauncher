@@ -6,15 +6,37 @@
 INSTALL_EDCOPILOT="false"
 INSTALL_EDCOPTER="false"
 
-# Enable or disable apps. Setting these values to false will skip the launch of the relevant app. Note: EDCoPTER can't function without EDCoPilot running
-EDCOPILOT_ENABLED="true"
-EDCOPTER_ENABLED="true"
-
 # The number of seconds to wait while trying to detect the launcher before exiting
 LAUNCHER_DETECTION_TIMEOUT=30
 
+####################
+# EDCoPilot Settings
+####################
+
+# Enable or disable EDCoPilot. Setting this value to false will skip the launch of EDCoPilot. Note: EDCoPTER can't function without EDCoPilot running
+EDCOPILOT_ENABLED="true"
+
 # The number of seconds to wait while trying to detect the EDCoPilot GUI before exiting
 EDCOPILOT_DETECTION_TIMEOUT=50
+
+####################
+# EDCoPTER Settings
+####################
+
+# Enable or disable EDCoPTER. Setting this value to false will skip the launch of EDCoPTER. Note: EDCoPTER can't function without EDCoPilot running
+EDCOPTER_ENABLED="true"
+
+# Enable or disable EDCoPTER headless mode. Enabling this will run EDCoPTER without a GUI (server only). Default is "false"
+EDCOPTER_HEADLESS_ENABLED="false"
+
+# Specify the TCP port EDCoPTER should listen on. Default is "4500". Leave empty to use default or saved EDCoPTER configuration
+EDCOPTER_LISTEN_PORT=""
+
+# Specify the IP address EDCoPTER should listen on. Default listens on all available local IPs "0.0.0.0". Leave empty to use default or saved EDCoPTER configuration
+EDCOPTER_LISTEN_IP=""
+
+# Specify the IP address of the EDCoPilot server. Default is the loopback address "127.0.0.1". Leave empty to use default or saved EDCoPTER configuration
+EDCOPTER_EDCOPILOT_SERVER_IP=""
 
 ####################
 # Stability options
