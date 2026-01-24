@@ -144,13 +144,21 @@ fi
 
 [[ -f "${config_file_path}" ]] && . "${config_file_path}" || echo "${colour_yellow}WARNING:${colour_reset} Config file does not exist. Setting defaults"
 
-    # General settings
+    # General settingsEDCOPTER_EDCOPILOT_SERVER_IP
     install_edcopilot="${INSTALL_EDCOPILOT:-false}"
     install_edcopter="${INSTALL_EDCOPTER:-false}"
-    edcopilot_enabled="${EDCOPILOT_ENABLED:-true}"
-    edcopter_enabled="${EDCOPTER_ENABLED:-true}"
     launcher_detection_timeout="${LAUNCHER_DETECTION_TIMEOUT:-30}"
+
+    # EDCoPilot Settings
+    edcopilot_enabled="${EDCOPILOT_ENABLED:-true}"
     edcopilot_detection_timeout="${EDCOPILOT_DETECTION_TIMEOUT:-40}"
+
+    # EDCoPTER Settings
+    edcopter_enabled="${EDCOPTER_ENABLED:-true}"
+    edcopter_headless_enabled="${EDCOPTER_HEADLESS_ENABLED:-false}"
+    edcopter_listen_port="${EDCOPTER_LISTEN_PORT:-}"
+    edcopter_listen_ip="${EDCOPTER_LISTEN_IP:-}"
+    edcopter_edcopilot_server_ip="${EDCOPTER_EDCOPILOT_SERVER_IP:-}"
 
     # Stability options
     hotas_fix_enabled="${HOTAS_FIX_ENABLED:-true}"
@@ -199,22 +207,29 @@ echo "${colour_cyan}Current User:${colour_reset} ${username}"
 echo "${colour_cyan}OS Pretty Name:${colour_reset} ${os_pretty_name}"
 echo "${colour_cyan}OS ID:${colour_reset} ${os_id}"
 echo "${colour_cyan}OS Like:${colour_reset} ${os_like}"
-echo ""
+echo "${colour_cyan}Config File Path:${colour_reset} ${config_file_path}"
+echo "--"
 echo "${colour_cyan}Steam Install Type:${colour_reset} ${steam_install_type}"
 echo "${colour_cyan}Steam Install Path:${colour_reset} ${steam_install_path}"
 echo "${colour_cyan}Steam Library File Path:${colour_reset} ${steam_library_file}"
+echo "--"
 echo "${colour_cyan}Elite Dangerous Steam Library Path:${colour_reset} ${ed_steam_library_base_path}"
 echo "${colour_cyan}Elite Dangerous Wine Prefix:${colour_reset} ${ed_wine_prefix}"
 echo "${colour_cyan}Elite Dangerous Proton Path:${colour_reset} ${ed_proton_path}"
 echo "${colour_cyan}Elite Dangerous Steam App ID:${colour_reset} ${ed_app_id}"
-echo ""
-echo "${colour_cyan}Config File Path:${colour_reset} ${config_file_path}"
-echo "${colour_cyan}EDCoPilot Enabled:${colour_reset} ${edcopilot_enabled}"
-echo "${colour_cyan}EDCoPTER Enabled:${colour_reset} ${edcopter_enabled}"
+echo "--"
 echo "${colour_cyan}EDCoPilot Installed:${colour_reset} ${edcopilot_installed}"
-echo "${colour_cyan}EDCoPTER Installed:${colour_reset} ${edcopter_installed}"
 echo "${colour_cyan}EDCoPilot Path:${colour_reset} ${edcopilot_final_path}"
+echo "${colour_cyan}EDCoPilot Enabled:${colour_reset} ${edcopilot_enabled}"
+echo "--"
+echo "${colour_cyan}EDCoPTER Installed:${colour_reset} ${edcopter_installed}"
 echo "${colour_cyan}EDCoPTER Path:${colour_reset} ${edcopter_final_path}"
+echo "${colour_cyan}EDCoPTER Enabled:${colour_reset} ${edcopter_enabled}"
+echo "${colour_cyan}EDCoPTER Headless Mode Enabled:${colour_reset} ${edcopter_headless_enabled}"
+echo "${colour_cyan}EDCoPTER Listen IP Override:${colour_reset} ${edcopter_listen_ip}"
+echo "${colour_cyan}EDCoPTER Listen Port Override:${colour_reset} ${edcopter_listen_port}"
+echo "${colour_cyan}EDCoPTER EDCoPilot Server IP Override:${colour_reset} ${edcopter_edcopilot_server_ip}"
+echo "--"
 echo "${colour_cyan}HOTAS Fix Enabled:${colour_reset} ${hotas_fix_enabled}"
 echo ""
 
@@ -482,8 +497,34 @@ done
 
 if [[ "$edcopter_enabled" == "true" && ${edcopter_installed} = "true" ]]; then
     echo ""
+
+    # Handle EDCoPTER runtime args
+    echo "${colour_cyan}INFO:${colour_reset} Building EDCoPTER command-line arguments..."
+
+    edcopter_runtime_args=()
+
+    # Handle headless override
+    if [[ "${edcopter_headless_enabled}" == "true" ]]; then
+        edcopter_runtime_args+=("--headless")
+    fi
+
+    # Handle IP override
+    if [[ -n "${edcopter_listen_ip}" ]]; then
+        edcopter_runtime_args+=("--ip" "${edcopter_listen_ip}")
+    fi
+
+    # Handle port override
+    if [[ -n "${edcopter_listen_port}" ]]; then
+        edcopter_runtime_args+=("--port" "${edcopter_listen_port}")
+    fi
+
+    # Handle EDCoPilot server IP override
+    if [[ -n "${edcopter_edcopilot_server_ip}" ]]; then
+        edcopter_runtime_args+=("--edcopilot-ip" "${edcopter_edcopilot_server_ip}")
+    fi
+
     echo "${colour_cyan}INFO:${colour_reset} Launching EDCoPTER"
-    $steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" --pass-env-matching="WINE*" --pass-env-matching="STEAM*" --pass-env-matching="PROTON*" --env="SteamGameId=${ed_app_id}" -- "${WINELOADER}" "${edcopter_final_path}" &> "${edcopter_log_file}" &
+    $steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" --pass-env-matching="WINE*" --pass-env-matching="STEAM*" --pass-env-matching="PROTON*" --env="SteamGameId=${ed_app_id}" -- "${WINELOADER}" "${edcopter_final_path}" "EDCoPTER" "${edcopter_runtime_args[@]}" &> "${edcopter_log_file}" &
     edcopter_pid=$!
 
     sleep 4
