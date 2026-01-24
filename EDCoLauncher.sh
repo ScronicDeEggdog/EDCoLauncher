@@ -144,7 +144,7 @@ fi
 
 [[ -f "${config_file_path}" ]] && . "${config_file_path}" || echo "${colour_yellow}WARNING:${colour_reset} Config file does not exist. Setting defaults"
 
-    # General settingsEDCOPTER_EDCOPILOT_SERVER_IP
+    # General settings
     install_edcopilot="${INSTALL_EDCOPILOT:-false}"
     install_edcopter="${INSTALL_EDCOPTER:-false}"
     launcher_detection_timeout="${LAUNCHER_DETECTION_TIMEOUT:-30}"
