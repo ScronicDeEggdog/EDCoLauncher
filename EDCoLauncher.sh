@@ -319,7 +319,7 @@ launcher_detection_count=0
 launcher_detection_interval=1
 
 echo "${colour_cyan}INFO:${colour_reset} Waiting for Elite Dangerous Launcher or MinEdLauncher to start for ${launcher_detection_timeout} seconds. You can change this value in the config file."
-while ! pgrep -f "[ZX]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
+while ! pgrep -f "[A-Za-z]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
 
     seconds_left=$(( $launcher_detection_timeout - $launcher_detection_count ))
     echo -ne "${seconds_left} seconds remaining...\r"
@@ -343,7 +343,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 
     game_window_detection_count=0
     game_window_detection_timeout=60
-    while ! pgrep -f "[ZX]:.*EliteDangerous64.exe" > /dev/null; do
+    while ! pgrep -f "[A-Z]:.*EliteDangerous64.exe" > /dev/null; do
         seconds_left=$(( $game_window_detection_timeout - $game_window_detection_count ))
         echo -ne "${seconds_left} seconds remaining...\r"
 
@@ -357,7 +357,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
     done
 
     echo "${colour_cyan}INFO:${colour_reset} Getting game window PID..."
-    edlauncher_pid=$(pgrep -f "[ZX]:.*EliteDangerous64.exe")
+    edlauncher_pid=$(pgrep -f "[A-Z]:.*EliteDangerous64.exe")
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
@@ -371,7 +371,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
     fi
 else
     echo "${colour_cyan}INFO:${colour_reset} Detected Elite Dangerous Launcher. Getting Launcher PID..."
-    edlauncher_pid=$(pgrep -f "[ZX]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*")
+    edlauncher_pid=$(pgrep -f "[A-Za-z]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*")
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
@@ -540,13 +540,13 @@ else
 fi
 
 #######################################################################################
-# Monitor the Elite Dangerous Launcher and exit EDCoPilot and EDCoPTER once it closed
+# Monitor EDCoPilot and exit EDCoPTER once it closes
 #######################################################################################
 
 echo ""
-echo "${colour_cyan}INFO:${colour_reset} To close EDCoPilot and EDCoPTER, please close the Elite Dangerous Launcher"
+echo "${colour_cyan}INFO:${colour_reset} To close EDCoPTER, please close EDCoPilot"
 
-while kill -0 "$edlauncher_pid" 2>/dev/null; do
+while pgrep -f "EDCoPilotGUI2.exe" > /dev/null; do
     sleep 1
 done
 
@@ -555,7 +555,7 @@ done
 #
 
 echo "${colour_cyan}INFO:${colour_reset} Closing EDCoPTER. Please wait"
-kill -15 $(pgrep -f "EDCoPTER.exe") &>/dev/null
+kill -15 $edcopter_pid &>/dev/null
 
 #
 # Gracefully shutdown EDCoPilot
