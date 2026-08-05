@@ -375,7 +375,7 @@ else
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
-    steam_linux_client_runtime_cmd="$(pgrep -fa "SteamLinuxRuntime_.*pressure-vessel.*/EDLaunch.exe" | sed -n 's|.* \(/[^ ]*/SteamLinuxRuntime_[^/]*/pressure-vessel\)/.*|\1|p' | head -n 1)/bin/steam-runtime-launch-client"
+    steam_linux_client_runtime_cmd="$(pgrep -fa "SteamLinuxRuntime_.*pressure-vessel.*proton" | sed -n 's|.* \(/[^ ]*/SteamLinuxRuntime_[^/]*/pressure-vessel\)/.*|\1|p' | head -n 1)/bin/steam-runtime-launch-client"
 
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Detected the Elite Dangerous Launcher (PID: ${edlauncher_pid}). Preparing to launch Add-ons..."
