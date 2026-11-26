@@ -319,7 +319,7 @@ launcher_detection_count=0
 launcher_detection_interval=1
 
 echo "${colour_cyan}INFO:${colour_reset} Waiting for Elite Dangerous Launcher or MinEdLauncher to start for ${launcher_detection_timeout} seconds. You can change this value in the config file."
-while ! pgrep -f "[ZX]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
+while ! pgrep -f "[A-Z]:.*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
 
     seconds_left=$(( $launcher_detection_timeout - $launcher_detection_count ))
     echo -ne "${seconds_left} seconds remaining...\r"
@@ -343,7 +343,7 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
 
     game_window_detection_count=0
     game_window_detection_timeout=60
-    while ! pgrep -f "[ZX]:.*EliteDangerous64.exe" > /dev/null; do
+    while ! pgrep -f "[A-Z]:.*EliteDangerous64.exe" > /dev/null; do
         seconds_left=$(( $game_window_detection_timeout - $game_window_detection_count ))
         echo -ne "${seconds_left} seconds remaining...\r"
 
@@ -356,8 +356,31 @@ if pgrep -f "MinEdLauncher" > /dev/null; then
         ((launcher_detection_count++))
     done
 
+    ############################################################
+    # PATCH: wait for a real game session before launching add-ons
+    ############################################################
+    game_detect_epoch=$(( $(date +%s) - 10 ))
+    echo "${colour_cyan}INFO:${colour_reset} Waiting for a game session (LoadGame in current journal)..."
+    session_detection_count=0
+    session_detection_timeout=600
+    journal_dir="${ed_wine_prefix}/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous"
+    while true; do
+        newest_journal=$(find "${journal_dir}" -name 'Journal.*.log' -newermt "@${game_detect_epoch}" -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -1 | cut -d' ' -f2-)
+        if [[ -n "${newest_journal}" ]] && grep -q '"event":"LoadGame"' "${newest_journal}"; then
+            echo "${colour_cyan}INFO:${colour_reset} Session detected in $(basename "${newest_journal}")"
+            break
+        fi
+        if (( session_detection_count >= session_detection_timeout )); then
+            echo "${colour_red}ERROR:${colour_reset} No game session within ${session_detection_timeout}s. Exiting"
+            exit 1
+        fi
+        sleep 2
+        ((session_detection_count+=2))
+    done
+
+
     echo "${colour_cyan}INFO:${colour_reset} Getting game window PID..."
-    edlauncher_pid=$(pgrep -f "[ZX]:.*EliteDangerous64.exe")
+    edlauncher_pid=$(pgrep -f "[A-Z]:.*EliteDangerous64.exe")
 
     # Get the correct path to the steam-linux-client-runtime binary
     echo "${colour_cyan}INFO:${colour_reset} Getting path to the Steam Linux Runtime Client..."
