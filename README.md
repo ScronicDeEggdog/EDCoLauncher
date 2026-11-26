@@ -92,6 +92,15 @@ HOTAS_FIX_ENABLED="true"
 #################
 
 # Specify the path to the LaunchEDCoPilot.exe file if you installed into a non-default location. Leave blank otherwise
+# This can fix potential problems; if you have normal Steam installed in the normal place, it will be:
+#
+# "$HOME/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/EDCoPilot/EDCoPilot.exe"
+#
+# I have my Steam library in ~/Steam, so mine is set to:
+#
+# EDCOPILOT_EXE_PATH="/home/merc/Steam/steamapps/compatdata/359320/pfx/drive_c/EDCoPilot/EDCoPilot.exe"
+#
+
 EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
