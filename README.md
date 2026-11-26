@@ -15,7 +15,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 ## 📋 Prerequisites
 
 *   **Elite Dangerous**: Installed via Steam (App ID: `359320`).
-*   **Proton 10.0-3**: Other versions of Proton may work, but results might vary.
+*   ~~**Proton 10.0-3**: Other versions of Proton may work, but results might vary.~~ Should work with most any Proton, including **GE-Proton10/11.**
 *   **System Dependencies**: `curl`, `sed`, `grep`, `pgrep`, and `tput` (standard on most Linux distributions).
 
 ## 🛠️ Installation & Setup
@@ -92,6 +92,15 @@ HOTAS_FIX_ENABLED="true"
 #################
 
 # Specify the path to the LaunchEDCoPilot.exe file if you installed into a non-default location. Leave blank otherwise
+# This can fix potential problems; if you have normal Steam installed in the normal place, it will be:
+#
+# "$HOME/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/EDCoPilot/EDCoPilot.exe"
+#
+# I have my Steam library in ~/Steam, so mine is set to:
+#
+# EDCOPILOT_EXE_PATH="/home/merc/Steam/steamapps/compatdata/359320/pfx/drive_c/EDCoPilot/EDCoPilot.exe"
+#
+
 EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
@@ -138,3 +147,5 @@ This project is licensed under the GNU GPLv3 License.
 [EDCoPilot](https://www.razzafrag.com/) by Razzafrag  
 [EDCoPTER](https://edcopter.net/) by Mark Hollingworth  
 [Elite Dangerous](https://www.elitedangerous.com/) by Frontier Developments 
+
+[EDCoLauncher fixes for GE-Proton/minedlauncher](https://github.com/darkjz)  darkjz on github
