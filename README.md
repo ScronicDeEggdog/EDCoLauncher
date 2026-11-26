@@ -1,4 +1,4 @@
-# EDCoLauncher
+# EDCoLauncher - Minedlauncher / GE-Proton compatible version
 
 A Bash script designed to automate the installation, configuration, and launching of [**EDCoPilot**](www.razzafrag.com) and [**EDCoPTER**](edcopter.net) for Elite Dangerous on Linux.
 
