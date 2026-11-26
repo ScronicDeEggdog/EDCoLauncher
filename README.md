@@ -110,11 +110,6 @@ EDCOPTER_EXE_PATH=""
 ## 🖥️ Usage
 
 <blockquote>
-<p>[!IMPORTANT]
-EDCoLauncher is optimized for Proton 10.0-3. Other versions of proton may not work.
-</blockquote>
-
-<blockquote>
 <p>[!WARNING]
 Running this script manually is not supported. You can monitor what the script is doing in realtime by running: </p><pre><code>tail -f EDCoLauncher.log</code></pre>
 </blockquote>
@@ -127,10 +122,6 @@ To run EDCoLauncher alongside MinEdLauncher, change your Steam Launch Options to
 ```bash
 STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime ./MinEdLauncher %command% /autorun /edo /autoquit waitForExit & ./EDCoLauncher.sh
 ```
-<blockquote>
-<p>[!WARNING]
-Not compatible with the /Autoquit MinEdLauncher option
-</blockquote>
 
 ## 📂 Troubleshooting & Logs
 The script generates specific logs in its local directory:
