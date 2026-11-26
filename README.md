@@ -15,7 +15,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 ## 📋 Prerequisites
 
 *   **Elite Dangerous**: Installed via Steam (App ID: `359320`).
-*   **Proton 10.0-3**: Other versions of Proton may work, but results might vary.
+*   ~~**Proton 10.0-3**: Other versions of Proton may work, but results might vary.~~ Should work with most any Proton, including **GE-Proton10/11.**
 *   **System Dependencies**: `curl`, `sed`, `grep`, `pgrep`, and `tput` (standard on most Linux distributions).
 
 ## 🛠️ Installation & Setup
